@@ -1,0 +1,54 @@
+extend ../layout2
+block content
+  // Content Header (Page header)
+  section.content-header
+    h1
+      | Users Management
+  // Main content
+  section.content
+    .row
+      // left column
+      .col-md-12
+        // general form elements
+        .box.box-primary
+          .box-header
+            h3.box-title Groups of username #{username} relate in
+          .box-body.pad.table-responsive
+            p
+              a(href='/etbs-users/edit/' + username) Back to Form
+            table.table.table-bordered.text-center
+              tr
+                th Username
+                th Group name
+                th
+              each group in groups
+                tr
+                  td= group.username
+                  td= group.group_name
+                  td
+                    form(method='POST' action='/etbs-users/user-group/delete')
+                      input#username(type='hidden' name='username' value=group.username)
+                      input#groupId(type='hidden' name='groupId' value=group.group_id)
+                      button.btn.btn-danger(type='submit') Remove
+    .row
+      // left column
+      .col-md-12
+        // general form elements
+        .box.box-primary
+          .box-header
+            h3.box-title Other user
+          .box-body.pad.table-responsive
+            table.table.table-bordered.text-center
+              tr
+                th Group ID
+                th Group name
+                th
+              each unGroup in unGroups
+                tr
+                  td= unGroup.group_id
+                  td= unGroup.group_name
+                  td
+                    form(method='POST' action='/etbs-users/user-group/insert')
+                      input#preUsername(type='hidden' name='preUsername' value=username)
+                      input#unGroupId(type='hidden' name='unGroupId' value=unGroup.group_id)
+                      button.btn.btn-primary(type='submit') Apply

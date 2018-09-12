@@ -1,0 +1,56 @@
+extend ../layout2
+block content
+  // Content Header (Page header)
+  section.content-header
+    h1
+      | Roles Management
+  // Main content
+  section.content
+    .row
+      // left column
+      .col-md-12
+        // general form elements
+        .box.box-primary
+          .box-header
+            h3.box-title Users in this role
+          .box-body.pad.table-responsive
+            p
+              a(href='/etbs-roles/edit/' + rolename + '/' + profileid) Back to Form
+            table.table.table-bordered.text-center
+              tr
+                th Username
+                th Role name
+                th
+              each user in users
+                tr
+                  td= user.username
+                  td= user.rolename
+                  td
+                    form(method='POST' action='/etbs-roles/users/delete')
+                      input#username(type='hidden' name='username' value=user.username)
+                      input#rolename(type='hidden' name='rolename' value=rolename)
+                      input#profileid(type='hidden' name='profileid' value=profileid)
+                      button.btn.btn-danger(type='submit') Remove
+    .row
+      // left column
+      .col-md-12
+        // general form elements
+        .box.box-primary
+          .box-header
+            h3.box-title Other user
+          .box-body.pad.table-responsive
+            table.table.table-bordered.text-center
+              tr
+                th Username
+                th Role name
+                th
+              each user in unRoleUsers
+                tr
+                  td= user.username
+                  td= user.rolename
+                  td
+                    form(method='POST' action='/etbs-roles/users/insert')
+                      input#username(type='hidden' name='username' value=user.username)
+                      input#rolename(type='hidden' name='rolename' value=rolename)
+                      input#profileid(type='hidden' name='profileid' value=profileid)
+                      button.btn.btn-primary(type='submit') Apply
