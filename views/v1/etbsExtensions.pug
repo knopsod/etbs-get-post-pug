@@ -21,6 +21,14 @@ block content
                   th Extension
                   th Client ID
                   th Name
+                  th Org ID
+                  th Type
+                  th License
+                  th Budget
+                  th Balance
+                  th Tenant
+                  th Authorization code
+                  th Rent charge
                   th(width=100)
               tbody
                 each extension in extensions
@@ -28,12 +36,28 @@ block content
                     td= extension.extension
                     td= extension.clientid
                     td= extension.name
+                    td= extension.orgid
+                    td= extension.exttype
+                    td= extension.has_license
+                    td= extension.budget
+                    td= extension.balance
+                    td= extension.tenant
+                    td= extension.authorization_code
+                    td= extension.rent_charge
                     td -
               tfoot
                 tr
                   th Extension
                   th Client ID
                   th Name
+                  th Org ID
+                  th Type
+                  th License
+                  th Budget
+                  th Balance
+                  th Tenant
+                  th Authorization code
+                  th Rent charge
                   th
           // /.box-body
         // /.box
