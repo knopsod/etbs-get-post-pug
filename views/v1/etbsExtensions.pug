@@ -14,7 +14,8 @@ block content
           // /.box-header
           .box-body.table-responsive
             p
-              a(href='/etbs-roles/add') New
+              form(method='GET' action='/etbs-extensions')
+                input(name='name' value=name)
             table#example.table.table-bordered.table-striped
               thead
                 tr
