@@ -18,7 +18,6 @@ router.get('/', function(req, res, next) {
           roles: result
         }
       );
-
       conn.end();
     });
   } else {
@@ -49,8 +48,8 @@ router.post('/insert', function(req, res, next) {
     };
 
     conn.query(sql, role, function (err, result) {
-      res.redirect('/etbs-roles');
       conn.end();
+      res.redirect('/etbs-roles');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -130,8 +129,8 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-roles');
       conn.end();
+      res.redirect('/etbs-roles');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -200,8 +199,8 @@ router.post('/delete', function(req, res, next) {
     var conditions = [originRolename, originProfileid];
 
     conn.query(sql, conditions, function (err, result) {
-      res.redirect('/etbs-roles');
       conn.end();
+      res.redirect('/etbs-roles');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -262,8 +261,8 @@ router.post('/users/insert', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-roles/users/' + rolename + '/' + profileid);
       conn.end();
+      res.redirect('/etbs-roles/users/' + rolename + '/' + profileid);
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -286,8 +285,8 @@ router.post('/users/delete', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-roles/users/' + rolename + '/' + profileid);
       conn.end();
+      res.redirect('/etbs-roles/users/' + rolename + '/' + profileid);
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -363,8 +362,8 @@ router.post('/permissions/insert', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-roles/permissions/' + rolename + '/' + originProfileid);
       conn.end();
+      res.redirect('/etbs-roles/permissions/' + rolename + '/' + originProfileid);
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -394,8 +393,8 @@ router.post('/permissions/delete', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-roles/permissions/' + rolename + '/' + profileid);
       conn.end();
+      res.redirect('/etbs-roles/permissions/' + rolename + '/' + profileid);
     });
   } else {
     res.status(500).send('Can not connect to database');

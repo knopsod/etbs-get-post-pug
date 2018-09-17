@@ -65,8 +65,8 @@ router.post('/insert', function(req, res, next) {
     };
 
     conn.query(sql, user, function (err, result) {
-      res.redirect('/etbs-users');
       conn.end();
+      res.redirect('/etbs-users');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -178,8 +178,8 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-users');
       conn.end();
+      res.redirect('/etbs-users');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -266,8 +266,8 @@ router.post('/delete', function(req, res, next) {
     var conditions = [originUsername];
 
     conn.query(sql, conditions, function (err, result) {
-      res.redirect('/etbs-users');
       conn.end();
+      res.redirect('/etbs-users');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -336,8 +336,8 @@ router.post('/user-group/insert', function(req, res, next) {
     };
 
     conn.query(sql, user_group, function (err, result) {
-      res.redirect('/etbs-users/user-group/' + username);
       conn.end();
+      res.redirect('/etbs-users/user-group/' + username);
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -359,8 +359,8 @@ router.post('/user-group/delete', function(req, res, next) {
     ];
 
     conn.query(sql, conditions, function (err, result) {
-      res.redirect('/etbs-users/user-group/' + username);
       conn.end();
+      res.redirect('/etbs-users/user-group/' + username);
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -415,8 +415,8 @@ router.post('/roles/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-users/roles/' + username);
       conn.end();
+      res.redirect('/etbs-users/roles/' + username);
     });
   } else {
     res.status(500).send('Can not connect to database');

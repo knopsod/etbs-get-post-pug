@@ -1,7 +1,5 @@
 $(function () {
-  $("#example1").DataTable({
-    "searching": false
-  });
+  $("#datatable-roles").DataTable();
   $('#example2').DataTable({
     "paging": true,
     "lengthChange": false,

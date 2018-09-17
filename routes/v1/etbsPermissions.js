@@ -51,8 +51,8 @@ router.post('/insert', function(req, res, next) {
     };
 
     conn.query(sql, perm, function (err, result) {
-      res.redirect('/etbs-permissions');
       conn.end();
+      res.redirect('/etbs-permissions');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -127,8 +127,8 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-permissions');
       conn.end();
+      res.redirect('/etbs-permissions');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -189,8 +189,8 @@ router.post('/delete', function(req, res, next) {
     var conditions = [originPermission, originProfileid, originPerm_type];
 
     conn.query(sql, conditions, function (err, result) {
-      res.redirect('/etbs-permissions');
       conn.end();
+      res.redirect('/etbs-permissions');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -254,8 +254,8 @@ router.post('/roles/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      res.redirect('/etbs-permissions/roles/' + permission + '/' + roleProfileid + '/' + perm_type);
       conn.end();
+      res.redirect('/etbs-permissions/roles/' + permission + '/' + roleProfileid + '/' + perm_type);
     });
   } else {
     res.status(500).send('Can not connect to database');
