@@ -15,7 +15,9 @@ block content
           .box-body.table-responsive
             p
               form(method='GET' action='/etbs-extensions')
-                input(name='name' value=name)
+                .form-group
+                  label.control-label(for='name') Name:
+                  input#name.form-control(name='name' value=name)
             table#datatable-extensions.table.table-bordered.table-striped
               thead
                 tr
