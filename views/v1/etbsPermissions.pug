@@ -31,9 +31,9 @@ block content
                     td= perm.perm_type
                     td= perm.is_active
                     td(style='text-align: center')
-                      a(href='/etbs-permissions/edit/' + perm.permission + '/' + perm.profileid + '/' + perm.perm_type) Edit
+                      a(href='/etbs-permissions/edit/' + (perm.permission?perm.permission:'') + '/' + (perm.profileid?perm.profileid:'') + '/' + (perm.perm_type?perm.perm_type:'')) Edit
                       | -
-                      a(href='/etbs-permissions/remove/' + perm.permission + '/' + perm.profileid + '/' + perm.perm_type) Remove
+                      a(href='/etbs-permissions/remove/' + (perm.permission?perm.permission:'') + '/' + (perm.profileid?perm.profileid:'') + '/' + (perm.perm_type?perm.perm_type:'')) Remove
               tfoot
                 tr
                   th Permission
