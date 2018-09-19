@@ -4,7 +4,6 @@ var router = express.Router();
 
 /* GET etbs-users listing. */
 router.get('/', function(req, res, next) {
-  var name = req.query.name;
 
   var conn = database.getConnection();
 
@@ -15,12 +14,9 @@ router.get('/', function(req, res, next) {
         rent_charge, created_at, updated_on 
       FROM extensions`;
 
-    sql += name ? ` WHERE name LIKE ?` : ``;
-
-    conn.query(sql, '%' + name + '%', function (err, result) {
+    conn.query(sql, function (err, result) {
       res.render('v1/etbsExtensions', 
         {
-          name: name,
           extensions: result
         }
       );

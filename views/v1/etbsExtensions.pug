@@ -3,21 +3,20 @@ block content
   // Content Header (Page header)
   section.content-header
     h1
-      | Roles Management
+      | Extensions
   // Main content
   section.content
     .row
       .col-xs-12
         .box
           .box-header
-            // h3.box-title Roles Management
+            // h3.box-title Extension
           // /.box-header
           .box-body.table-responsive
             p
-              form(method='GET' action='/etbs-extensions')
-                .form-group
-                  label.control-label(for='name') Name:
-                  input#name.form-control(name='name' value=name)
+              .form-group
+                label.control-label(for='name') Search by Name:
+                input#name.form-control(name='name')
             table#datatable-extensions.table.table-bordered.table-striped
               thead
                 tr
@@ -32,7 +31,6 @@ block content
                   th Tenant
                   th Authorization code
                   th Rent charge
-                  th(width=100)
               tbody
                 each extension in extensions
                   tr
@@ -47,7 +45,6 @@ block content
                     td= extension.tenant
                     td= extension.authorization_code
                     td= extension.rent_charge
-                    td -
               tfoot
                 tr
                   th Extension
@@ -61,7 +58,6 @@ block content
                   th Tenant
                   th Authorization code
                   th Rent charge
-                  th
           // /.box-body
         // /.box
   // /.content
