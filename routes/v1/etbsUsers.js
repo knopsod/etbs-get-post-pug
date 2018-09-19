@@ -66,7 +66,13 @@ router.post('/insert', function(req, res, next) {
 
     conn.query(sql, user, function (err, result) {
       conn.end();
-      res.redirect('/etbs-users');
+      if (!err)
+        res.redirect('/etbs-users');
+      else
+        res.render('v1/etbsUsersForm', {
+          action: '/etbs-users/insert',
+          error: err
+        });
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -75,6 +81,8 @@ router.post('/insert', function(req, res, next) {
 
 router.get('/edit/:username', function(req, res, next) {
   var username = req.params.username;
+
+  var error = req.query.error;
 
   var clientid  = '';
   var extension = '';
@@ -131,7 +139,8 @@ router.get('/edit/:username', function(req, res, next) {
           fax       : fax,
           is_active : is_active,
           rolename  : rolename,
-          cnt       : cnt
+          cnt       : cnt,
+          error     : error
         });
 
         conn.end();
@@ -179,7 +188,10 @@ router.post('/update', function(req, res, next) {
 
     conn.query(sql, setditions, function (err, result) {
       conn.end();
-      res.redirect('/etbs-users');
+      if (!err)
+        res.redirect('/etbs-users');
+      else
+      res.redirect('/etbs-users/edit/' + originUsername + '?error=1');
     });
   } else {
     res.status(500).send('Can not connect to database');

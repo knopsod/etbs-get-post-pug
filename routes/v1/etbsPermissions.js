@@ -52,7 +52,13 @@ router.post('/insert', function(req, res, next) {
 
     conn.query(sql, perm, function (err, result) {
       conn.end();
-      res.redirect('/etbs-permissions');
+      if (!err)
+        res.redirect('/etbs-permissions');
+      else
+        res.render('v1/etbsPermissionsForm', {
+          action: '/etbs-permissions/insert',
+          error: err
+        });
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -63,6 +69,8 @@ router.get('/edit/:permission/:profileid/:perm_type', function(req, res, next) {
   var permission = req.params.permission;
   var profileid = req.params.profileid;
   var perm_type = req.params.perm_type;
+
+  var error = req.query.error;
 
   var is_active = '';
 
@@ -84,12 +92,13 @@ router.get('/edit/:permission/:profileid/:perm_type', function(req, res, next) {
         rolename = result.length ? result[0].rolename : 'Not yet assign ROLE';
   
         res.render('v1/etbsPermissionsForm', {
-          action: '/etbs-permissions/update',
+          action    : '/etbs-permissions/update',
           permission: permission,
-          profileid: profileid,
-          perm_type: perm_type,
-          is_active: is_active,
-          rolename: rolename
+          profileid : profileid,
+          perm_type : perm_type,
+          is_active : is_active,
+          rolename  : rolename,
+          error     : error
         });
   
         conn.end();
@@ -128,7 +137,10 @@ router.post('/update', function(req, res, next) {
 
     conn.query(sql, setditions, function (err, result) {
       conn.end();
-      res.redirect('/etbs-permissions');
+      if (!err)
+        res.redirect('/etbs-permissions');
+      else
+      res.redirect('/etbs-permissions/edit/' + originPermission + '/' + originProfileid + '/' + originPerm_type + '?error=1');
     });
   } else {
     res.status(500).send('Can not connect to database');

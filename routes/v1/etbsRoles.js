@@ -66,6 +66,8 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
   var rolename = req.params.rolename;
   var profileid = req.params.profileid;
 
+  var error = req.query.error;
+
   var is_active = '';
 
   var cnt = '';
@@ -94,12 +96,13 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
             permsCnt = permsResult.length ? permsResult[0].cnt : 0;
   
             res.render('v1/etbsRolesForm', {
-              action: '/etbs-roles/update',
-              rolename: rolename,
-              profileid: profileid,
-              is_active: is_active,
-              cnt: cnt,
-              permsCnt: permsCnt
+              action    : '/etbs-roles/update',
+              rolename  : rolename,
+              profileid : profileid,
+              is_active : is_active,
+              cnt       : cnt,
+              permsCnt  : permsCnt,
+              error     : error
             });
       
             conn.end();
@@ -139,7 +142,7 @@ router.post('/update', function(req, res, next) {
       if (!err)
         res.redirect('/etbs-roles');
       else
-        res.redirect('/etbs-roles/edit/' + originRolename + '/' + originProfileid);
+        res.redirect('/etbs-roles/edit/' + originRolename + '/' + originProfileid + '?error=1');
     });
   } else {
     res.status(500).send('Can not connect to database');
