@@ -33,34 +33,34 @@ block content
                 input#originUsername(type='hidden' name='originUsername' value=username)
               .form-group
                 label(for='username') Username
-                input#username.form-control(type='text', placeholder='Username' name='username' value=username required)
+                input#username.form-control(type='text' placeholder='Username' name='username' value=username required)
               .form-group
                 label(for='clientid') Client ID
-                input#clientid.form-control(type='text', placeholder='Client ID' name='clientid' value=clientid)
+                input#clientid.form-control(type='text' placeholder='Client ID' name='clientid' value=clientid)
               .form-group
                 label(for='extension') Extension
-                input#extension.form-control(type='text', placeholder='Extension' name='extension' value=extension)
+                input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
               .form-group
                 label(for='name') Name
-                input#name.form-control(type='text', placeholder='Name' name='name' value=name)
+                input#name.form-control(type='text' placeholder='Name' name='name' value=name)
               .form-group
                 label(for='logo') Logo
-                input#logo.form-control(type='text', placeholder='Logo' name='logo' value=logo)
+                input#logo.form-control(type='text' placeholder='Logo' name='logo' value=logo)
               .form-group
                 label(for='company') Company
-                input#company.form-control(type='text', placeholder='Company' name='company' value=company)
+                input#company.form-control(type='text' placeholder='Company' name='company' value=company)
               .form-group
                 label(for='email') Email
-                input#email.form-control(type='email', placeholder='Email' name='email' value=email)
+                input#email.form-control(type='email' placeholder='Email' name='email' value=email)
               .form-group
                 label(for='mobile') Mobile
-                input#mobile.form-control(type='text', placeholder='Mobile' name='mobile' value=mobile)
+                input#mobile.form-control(type='tel' placeholder='Mobile' name='mobile' value=mobile pattern='[0-9]{10}')
               .form-group
                 label(for='fax') Fax
-                input#fax.form-control(type='text', placeholder='Fax' name='fax' value=fax)
+                input#fax.form-control(type='tel' placeholder='Fax' name='fax' value=fax pattern='[0-9]{10}')
               .form-group
                 label(for='is_active') Active
-                input#is_active.form-control(type='text', placeholder='Active' name='is_active' value=is_active)
+                input#is_active.form-control(type='text' placeholder='Active' name='is_active' value=is_active)
               if rolename != undefined
                 .form-group
                   label(for='roles') Role

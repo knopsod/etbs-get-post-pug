@@ -1,6 +1,6 @@
 $(function () {
   $("#datatable-extensions").DataTable({
-    "searching": false
+    "searching": true
   });
   $('#example2').DataTable({
     "paging": true,
