@@ -49,7 +49,13 @@ router.post('/insert', function(req, res, next) {
 
     conn.query(sql, role, function (err, result) {
       conn.end();
-      res.redirect('/etbs-roles');
+      if (!err)
+        res.redirect('/etbs-roles');
+      else 
+        res.render('v1/etbsRolesForm', {
+          action: '/etbs-roles/insert',
+          error: err
+        });
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -130,7 +136,10 @@ router.post('/update', function(req, res, next) {
 
     conn.query(sql, setditions, function (err, result) {
       conn.end();
-      res.redirect('/etbs-roles');
+      if (!err)
+        res.redirect('/etbs-roles');
+      else
+        res.redirect('/etbs-roles/edit/' + originRolename + '/' + originProfileid);
     });
   } else {
     res.status(500).send('Can not connect to database');

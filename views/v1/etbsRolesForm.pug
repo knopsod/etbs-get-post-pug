@@ -19,6 +19,13 @@ block content
             else
               h3.box-title Remove
           // /.box-header
+          if error
+            .alert.alert-danger.alert-dismissible
+              button.close(type='button' data-dismiss='alert' aria-hidden=true) &times;
+              h4
+                i.icon.fa.fa-ban
+                | Alert
+              | Some value are not allow, please try again.
           // form start
           form(method='POST' action=action role='form')
             .box-body
