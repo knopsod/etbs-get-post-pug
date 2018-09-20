@@ -53,11 +53,31 @@ block content
                   p
                     a(href= '/etbs-roles/permissions/' + rolename + '/' + profileid)= permsCnt + ' permission(s)'
               .form-group
-                each permission, index in permissions
-                  .checkbox
-                    label
-                      input(type='checkbox' checked=(permission.profileid == profileid) name='permissions[' + index + ']' value='{}')
-                      | #{permission.permission}, #{permission.profileid}, #{permission.perm_type}, #{permission.rolename}
+                .box-body
+                  table.table.table-bordered.table-horver
+                    thead
+                      tr
+                        th
+                        th Permission
+                        th Profile ID
+                        th Permission Type
+                        th Role Name
+                    tbody
+                      each permission in permissions
+                        tr
+                          td
+                            input(type='checkbox' checked=(permission.profileid == profileid) name='permissions' value='{"permission": "' + permission.permission + '", "profileid": ' + permission.profileid + ', "perm_type" : "' + permission.perm_type + '"}')
+                          td= permission.permission
+                          td= permission.profileid
+                          td= permission.perm_type
+                          td= permission.rolename
+                    tfoot
+                      tr
+                        th
+                        th Permission
+                        th Profile ID
+                        th Permission Type
+                        th Role Name
               // /.box-body
               .box-footer
               if action == '/etbs-roles/insert'

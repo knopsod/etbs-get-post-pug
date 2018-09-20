@@ -134,7 +134,14 @@ router.post('/update', function(req, res, next) {
   var profileid = req.body.profileid;
   var is_active = req.body.is_active;
 
-  console.log(req.body.permissions);
+  var permissionsObj = req.body.permissions;
+  var permissions;
+
+  if (typeof permissionsObj === 'string') {
+    permissions = [JSON.parse(permissionsObj)];
+  } else {
+    permissions = permissionsObj.map(json => JSON.parse(json));
+  }
 
   var conn = database.getConnection();
 
