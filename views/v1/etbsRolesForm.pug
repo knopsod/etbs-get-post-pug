@@ -1,4 +1,4 @@
-extend ../layout2
+extend ../layout
 block content
   // Content Header (Page header)
   section.content-header
@@ -52,6 +52,12 @@ block content
                   label(for='cnt') Permissions 
                   p
                     a(href= '/etbs-roles/permissions/' + rolename + '/' + profileid)= permsCnt + ' permission(s)'
+              .form-group
+                each permission, index in permissions
+                  .checkbox
+                    label
+                      input(type='checkbox' checked=(permission.profileid == profileid) name='permissions[' + index + ']' value='{}')
+                      | #{permission.permission}, #{permission.profileid}, #{permission.perm_type}, #{permission.rolename}
               // /.box-body
               .box-footer
               if action == '/etbs-roles/insert'

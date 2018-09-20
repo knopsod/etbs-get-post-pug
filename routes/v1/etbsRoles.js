@@ -27,7 +27,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   res.render('v1/etbsRolesForm', {
-    action: '/etbs-roles/insert'
+    action: '/etbs-roles/insert',
+    permissions: []
   });
 });
 
@@ -92,20 +93,31 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
           var sql = 'SELECT COUNT(1) AS cnt FROM permissions WHERE profileid = ?';
           var conditions = [profileid];
   
-          conn.query(sql, conditions, function (err, permsResult) {
-            permsCnt = permsResult.length ? permsResult[0].cnt : 0;
+          conn.query(sql, conditions, function (err, permsCntResult) {
+            permsCnt = permsCntResult.length ? permsCntResult[0].cnt : 0;
   
-            res.render('v1/etbsRolesForm', {
-              action    : '/etbs-roles/update',
-              rolename  : rolename,
-              profileid : profileid,
-              is_active : is_active,
-              cnt       : cnt,
-              permsCnt  : permsCnt,
-              error     : error
-            });
-      
-            conn.end();
+            if (permsCntResult) {
+              var sql = 
+                `SELECT DISTINCT p.permission, p.profileid, p.perm_type, r.rolename
+                FROM permissions p
+                LEFT JOIN roles r ON p.profileid = r.profileid`;
+
+              conn.query(sql, function (err, permsResult) {
+                res.render('v1/etbsRolesForm', {
+                  action      : '/etbs-roles/update',
+                  rolename    : rolename,
+                  profileid   : profileid,
+                  is_active   : is_active,
+                  cnt         : cnt,
+                  permsCnt    : permsCnt,
+                  permissions : permsResult,
+                  error       : error
+                });
+          
+                conn.end();
+              });
+
+            }
           });
         }
       });
@@ -121,6 +133,8 @@ router.post('/update', function(req, res, next) {
   var rolename = req.body.rolename;
   var profileid = req.body.profileid;
   var is_active = req.body.is_active;
+
+  console.log(req.body.permissions);
 
   var conn = database.getConnection();
 
