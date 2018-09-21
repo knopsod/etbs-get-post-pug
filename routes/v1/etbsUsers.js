@@ -182,11 +182,15 @@ router.post('/update', function(req, res, next) {
   var groupsObj = req.body.groups;
   var groups;
 
-  if (typeof groupsObj === 'string') {
+  if (!groupsObj) {
+    groups = [];
+  } else if (typeof groupsObj === 'string') {
     groups = [JSON.parse(groupsObj)];
   } else {
     groups = groupsObj.map(json => JSON.parse(json));
   }
+
+  console.log(groups);
 
   var conn = database.getConnection();
 

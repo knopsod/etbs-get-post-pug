@@ -137,13 +137,15 @@ router.post('/update', function(req, res, next) {
   var permissionsObj = req.body.permissions;
   var permissions;
 
-  if (typeof permissionsObj === 'string') {
-    permissions = [JSON.parse(permissionsObj)];
-  } else if (permissionsObj.length) {
-    permissions = permissionsObj.map(json => JSON.parse(json));
-  } else {
+  if (!permissionsObj) {
     permissions = [];
+  } else if (typeof permissionsObj === 'string') {
+    permissions = [JSON.parse(permissionsObj)];
+  } else {
+    permissions = permissionsObj.map(json => JSON.parse(json));
   }
+
+  console.log(permissions);
 
   var conn = database.getConnection();
 
