@@ -30,7 +30,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   res.render('v1/etbsUsersForm', {
-    action: '/etbs-users/insert'
+    action    : '/etbs-users/insert',
+    extensions: [],
+    groups    : []
   });
 });
 
@@ -115,10 +117,8 @@ router.get('/edit/:username', function(req, res, next) {
       mobile    = result.length ? result[0].mobile    : '';
       fax       = result.length ? result[0].fax       : '';
       is_active = result.length ? result[0].is_active : '';
-      
-      if (result.length) {
-        rolename  = result[0].rolename ? result[0].rolename : '';
-      }
+
+      rolename  = result.length && result[0].rolename ? result[0].rolename : '';
 
       var sql = 'SELECT COUNT(1) AS cnt FROM user_group WHERE username = ?';
       var conditions = [username];
@@ -126,24 +126,38 @@ router.get('/edit/:username', function(req, res, next) {
       conn.query(sql, conditions, function (err, resultCnt) {
         cnt = resultCnt.length ? resultCnt[0].cnt : 0;
 
-        res.render('v1/etbsUsersForm', {
-          action    : '/etbs-users/update',
-          username  : username,
-          clientid  : clientid,
-          extension : extension,
-          name      : name,
-          logo      : logo,
-          company   : company,
-          email     : email,
-          mobile    : mobile,
-          fax       : fax,
-          is_active : is_active,
-          rolename  : rolename,
-          cnt       : cnt,
-          error     : error
+        var sql = 'SELECT extension FROM extensions';
+
+        conn.query(sql, function (err, extensionsResult) {
+
+          var sql = 'SELECT group_id, group_name FROM groups';
+
+          conn.query(sql, function (err, groupsResult) {
+
+            res.render('v1/etbsUsersForm', {
+              action    : '/etbs-users/update',
+              username  : username,
+              clientid  : clientid,
+              extension : extension,
+              name      : name,
+              logo      : logo,
+              company   : company,
+              email     : email,
+              mobile    : mobile,
+              fax       : fax,
+              is_active : is_active,
+              rolename  : rolename,
+              cnt       : cnt,
+              error     : error,
+              extensions: extensionsResult,
+              groups    : groupsResult
+            });
+    
+            conn.end();
+          });
+
         });
 
-        conn.end();
       });
     });
   } else {
@@ -164,6 +178,15 @@ router.post('/update', function(req, res, next) {
   var mobile    = req.body.mobile;
   var fax       = req.body.fax;
   var is_active = req.body.is_active;
+
+  var groupsObj = req.body.groups;
+  var groups;
+
+  if (typeof groupsObj === 'string') {
+    groups = [JSON.parse(groupsObj)];
+  } else {
+    groups = groupsObj.map(json => JSON.parse(json));
+  }
 
   var conn = database.getConnection();
 

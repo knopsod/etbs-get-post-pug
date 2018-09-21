@@ -139,8 +139,10 @@ router.post('/update', function(req, res, next) {
 
   if (typeof permissionsObj === 'string') {
     permissions = [JSON.parse(permissionsObj)];
-  } else {
+  } else if (permissionsObj.length) {
     permissions = permissionsObj.map(json => JSON.parse(json));
+  } else {
+    permissions = [];
   }
 
   var conn = database.getConnection();
@@ -159,6 +161,9 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
+
+
+
       conn.end();
       if (!err)
         res.redirect('/etbs-roles');

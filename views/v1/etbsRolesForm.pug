@@ -1,4 +1,4 @@
-extend ../layout
+extend ../layout2
 block content
   // Content Header (Page header)
   section.content-header
@@ -54,7 +54,7 @@ block content
                     a(href= '/etbs-roles/permissions/' + rolename + '/' + profileid)= permsCnt + ' permission(s)'
               .form-group
                 .box-body
-                  table.table.table-bordered.table-horver
+                  table.table.table-bordered.table-hover
                     thead
                       tr
                         th
@@ -66,7 +66,7 @@ block content
                       each permission in permissions
                         tr
                           td
-                            input(type='checkbox' checked=(permission.profileid == profileid) name='permissions' value='{"permission": "' + permission.permission + '", "profileid": ' + permission.profileid + ', "perm_type" : "' + permission.perm_type + '"}')
+                            input(type='checkbox' checked=(permission.profileid == profileid) name='permissions' value=permission)
                           td= permission.permission
                           td= permission.profileid
                           td= permission.perm_type
