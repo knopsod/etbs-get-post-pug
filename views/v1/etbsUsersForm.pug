@@ -35,6 +35,12 @@ block content
                 label(for='username') Username
                 input#username.form-control(type='text' placeholder='Username' name='username' value=username required)
               .form-group
+                label(for='password') Password
+                input#password.form-control(type='password' name='password' required)
+              .form-group
+                label(for='retypePassword') Re-type Password
+                input#retypePassword.form-control(type='password' name='retypePassword' required)
+              .form-group
                 label(for='clientid') Client ID
                 input#clientid.form-control(type='text' placeholder='Client ID' name='clientid' value=clientid)
               if organizations
