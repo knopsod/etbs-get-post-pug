@@ -52,6 +52,13 @@ block content
                   label(for='rolename') Role
                   p
                     a(href= '/etbs-permissions/roles/' + permission + '/' + profileid + '/' + perm_type)= rolename
+              if roles
+                .form-group
+                  label(for='role') Roles (Profile ID)
+                  select(name='role').form-control
+                    option -
+                    each role in roles
+                      option(selected=(role.profileid==profileid) value=role)= role.rolename + '(' + role.profileid + ')'
               // /.box-body
               .box-footer
               if action == '/etbs-permissions/insert'

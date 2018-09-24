@@ -132,26 +132,35 @@ router.get('/edit/:username', function(req, res, next) {
 
           conn.query(sql, function (err, groupsResult) {
 
-            res.render('v1/etbsUsersForm', {
-              action    : '/etbs-users/update',
-              username  : username,
-              clientid  : clientid,
-              extension : extension,
-              name      : name,
-              logo      : logo,
-              company   : company,
-              email     : email,
-              mobile    : mobile,
-              fax       : fax,
-              is_active : is_active,
-              rolename  : rolename,
-              cnt       : cnt,
-              error     : error,
-              extensions: extensionsResult,
-              groups    : groupsResult
+            var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
+              org_path, created_at, updated_on
+            FROM organizations`;
+
+            conn.query(sql, function (err, orgsResult) {
+
+              res.render('v1/etbsUsersForm', {
+                action    : '/etbs-users/update',
+                username  : username,
+                clientid  : clientid,
+                extension : extension,
+                name      : name,
+                logo      : logo,
+                company   : company,
+                email     : email,
+                mobile    : mobile,
+                fax       : fax,
+                is_active : is_active,
+                rolename  : rolename,
+                cnt       : cnt,
+                error     : error,
+                extensions: extensionsResult,
+                groups    : groupsResult,
+                organizations : orgsResult
+              });
+      
+              conn.end();
             });
-    
-            conn.end();
+
           });
 
         });

@@ -90,18 +90,25 @@ router.get('/edit/:permission/:profileid/:perm_type', function(req, res, next) {
   
       conn.query(sql, conditions, function (err, result) {
         rolename = result.length ? result[0].rolename : 'Not yet assign ROLE';
-  
-        res.render('v1/etbsPermissionsForm', {
-          action    : '/etbs-permissions/update',
-          permission: permission,
-          profileid : profileid,
-          perm_type : perm_type,
-          is_active : is_active,
-          rolename  : rolename,
-          error     : error
+
+        var sql = 'SELECT rolename, profileid, is_active FROM roles';
+
+        conn.query(sql, function (err, rolesResult) {
+
+          res.render('v1/etbsPermissionsForm', {
+            action    : '/etbs-permissions/update',
+            permission: permission,
+            profileid : profileid,
+            perm_type : perm_type,
+            is_active : is_active,
+            rolename  : rolename,
+            error     : error,
+            roles     : rolesResult
+          });
+    
+          conn.end();
         });
   
-        conn.end();
       });
     });
   } else {

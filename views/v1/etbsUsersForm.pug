@@ -37,15 +37,23 @@ block content
               .form-group
                 label(for='clientid') Client ID
                 input#clientid.form-control(type='text' placeholder='Client ID' name='clientid' value=clientid)
+              if organizations
+                .form-group
+                  label(for='organization') Organization(Client ID)
+                  select(name='organization').form-control
+                    option -
+                    each org in organizations
+                      option(value=org)= org.org_name + '(' + org.clientid + ')'
               .form-group
                 label(for='extension') Extension
                 input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
               if extensions
                 .form-group
-                  label(for='extensions') Extension
-                  select.form-control
+                  label(for='extension') Extension
+                  select(name='extension').form-control
+                    option -
                     each ext in extensions
-                      option= ext.extension
+                      option(value=ext)= ext.extension
               .form-group
                 label(for='name') Name
                 input#name.form-control(type='text' placeholder='Name' name='name' value=name)
@@ -80,7 +88,7 @@ block content
               if groups
                 .form-group
                   .box-body
-                    table.table.table-bordered.table-hover
+                    table#datatable-users-form.table.table-bordered.table-hover
                       thead
                         tr
                           th
@@ -106,3 +114,21 @@ block content
                 button.btn.btn-primary(type='submit') Save
               else
                 button.btn.btn-danger(type='submit') Remove
+block script
+  // jQuery 2.2.0
+  script(src='/AdminLTE-2.3.3/plugins/jQuery/jQuery-2.2.0.min.js')
+  // Bootstrap 3.3.6
+  // script(src='/AdminLTE-2.3.3/bootstrap/js/bootstrap.min.js', type='text/javascript')
+  // DataTables
+  script(src='/AdminLTE-2.3.3/plugins/datatables/jquery.dataTables.min.js', type='text/javascript')
+  script(src='/AdminLTE-2.3.3/plugins/datatables/dataTables.bootstrap.min.js', type='text/javascript')
+  // SlimScroll
+  // script(src='/AdminLTE-2.3.3/plugins/slimScroll/jquery.slimscroll.min.js', type='text/javascript')
+  // FastClick
+  // script(src='/AdminLTE-2.3.3/plugins/fastclick/fastclick.js', type='text/javascript')
+  // AdminLTE App
+  // script(src='/AdminLTE-2.3.3/dist/js/app.min.js', type='text/javascript')
+  // AdminLTE for demo purpose
+  script(src='/AdminLTE-2.3.3/dist/js/demo.js', type='text/javascript')
+  // page script
+  script(src='/javascripts/tables/usersFormDataTable.js' type='text/javascript')
