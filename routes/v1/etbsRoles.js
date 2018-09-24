@@ -102,6 +102,7 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
                 LEFT JOIN roles r ON p.profileid = r.profileid`;
 
               conn.query(sql, function (err, permsResult) {
+                var originPermissions = permsResult.filter(perm => perm.profileid == profileid);
                 res.render('v1/etbsRolesForm', {
                   action      : '/etbs-roles/update',
                   rolename    : rolename,
@@ -110,6 +111,7 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
                   cnt         : cnt,
                   permsCnt    : permsCnt,
                   permissions : permsResult,
+                  originPermissions : originPermissions,
                   error       : error
                 });
           
@@ -125,12 +127,6 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
     res.status(500).send('Can not connect to database');
   }
 });
-
-async function asyncForEach(array, callback) {
-  for (let i = 0; i < array.length; i++) {
-    
-  }
-}
 
 router.post('/update', function(req, res, next) {
   var originRolename = req.body.originRolename;
@@ -148,6 +144,17 @@ router.post('/update', function(req, res, next) {
     permissions = [JSON.parse(permissionsObj)];
   } else {
     permissions = permissionsObj.map(json => JSON.parse(json));
+  }
+  
+  var originPermissionsObj = req.body.originPermissions;
+  var originPermissions;
+
+  if (!originPermissionsObj) {
+    originPermissions = [];
+  } else if (typeof originPermissionsObj === 'string') {
+    originPermissions = [JSON.parse(originPermissionsObj)];
+  } else {
+    originPermissions = originPermissionsObj.map(json => JSON.parse(json));
   }
 
   var conn = database.getConnection();
@@ -167,6 +174,8 @@ router.post('/update', function(req, res, next) {
 
     conn.query(sql, setditions, function (err, result) {
 
+      
+
       permissions.forEach(function(element) {
         var sql = 'UPDATE permissions SET ? WHERE permission = ? AND profileid = ? AND perm_type = ?';
         var setditions = [
@@ -183,8 +192,9 @@ router.post('/update', function(req, res, next) {
         conn.query(sql, setditions, function(err, result) {
 
         });
-      });
 
+      });
+      
       setTimeout(() => {
         conn.end();
       }, 1000);

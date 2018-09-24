@@ -79,9 +79,9 @@ block content
                           th Profile ID
                           th Permission Type
                           th Role Name
-              if permissions
-                each permission in permissions
-                  input(type='hidden' value=permission name='originPermissions')
+              if originPermissions
+                each originPermission in originPermissions
+                  input(type='hidden' value=originPermission name='originPermissions')
               // /.box-body
               .box-footer
               if action == '/etbs-roles/insert'
