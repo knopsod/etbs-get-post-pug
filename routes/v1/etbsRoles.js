@@ -126,6 +126,12 @@ router.get('/edit/:rolename/:profileid', function(req, res, next) {
   }
 });
 
+async function asyncForEach(array, callback) {
+  for (let i = 0; i < array.length; i++) {
+    
+  }
+}
+
 router.post('/update', function(req, res, next) {
   var originRolename = req.body.originRolename;
   var originProfileid = req.body.originProfileid;
@@ -144,8 +150,6 @@ router.post('/update', function(req, res, next) {
     permissions = permissionsObj.map(json => JSON.parse(json));
   }
 
-  console.log(permissions);
-
   var conn = database.getConnection();
 
   if (conn) {
@@ -163,9 +167,28 @@ router.post('/update', function(req, res, next) {
 
     conn.query(sql, setditions, function (err, result) {
 
+      permissions.forEach(function(element) {
+        var sql = 'UPDATE permissions SET ? WHERE permission = ? AND profileid = ? AND perm_type = ?';
+        var setditions = [
+          {
+            permission: element.permission,
+            profileid: profileid,
+            perm_type: element.perm_type
+          },
+          element.permission,
+          element.profileid,
+          element.perm_type
+        ];
 
+        conn.query(sql, setditions, function(err, result) {
 
-      conn.end();
+        });
+      });
+
+      setTimeout(() => {
+        conn.end();
+      }, 1000);
+      
       if (!err)
         res.redirect('/etbs-roles');
       else

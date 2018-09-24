@@ -30,9 +30,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   res.render('v1/etbsUsersForm', {
-    action    : '/etbs-users/insert',
-    extensions: [],
-    groups    : []
+    action    : '/etbs-users/insert'
   });
 });
 

@@ -40,11 +40,12 @@ block content
               .form-group
                 label(for='extension') Extension
                 input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
-              .form-group
-                label(for='extensions') Extension
-                select.form-control
-                  each ext in extensions
-                    option= ext.extension
+              if extensions
+                .form-group
+                  label(for='extensions') Extension
+                  select.form-control
+                    each ext in extensions
+                      option= ext.extension
               .form-group
                 label(for='name') Name
                 input#name.form-control(type='text' placeholder='Name' name='name' value=name)
@@ -76,27 +77,27 @@ block content
                   label(for='cnt') Groups
                   p
                     a(href= '/etbs-users/user-group/' + username)= cnt + ' group(s)'
-              .form-group
-                .box-body
-                  table.table.table-bordered.table-hover
-                    thead
-                      tr
-                        th
-                        th Group ID
-                        th Group Name
-                    tbody
-                      each group in groups
+              if groups
+                .form-group
+                  .box-body
+                    table.table.table-bordered.table-hover
+                      thead
                         tr
-                          td
-                            input(type='checkbox' name='groups' value=group)
-                          td= group.group_id
-                          td= group.group_name
-                    tfoot
-                      tr
-                        th
-                        th Group ID
-                        th Group Name
-
+                          th
+                          th Group ID
+                          th Group Name
+                      tbody
+                        each group in groups
+                          tr
+                            td
+                              input(type='checkbox' name='groups' value=group)
+                            td= group.group_id
+                            td= group.group_name
+                      tfoot
+                        tr
+                          th
+                          th Group ID
+                          th Group Name
               // /.box-body
               .box-footer
               if action == '/etbs-users/insert'
