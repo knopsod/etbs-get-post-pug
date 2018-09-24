@@ -173,8 +173,31 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
+      var permsTemp;
+      originPermissions.forEach(function(originElement) {
+        permsTemp = permissions.find(function(element) {
+          return ( originElement.permission == element.permission &&
+            originElement.profileid == element.profileid &&
+            originElement.perm_type == element.perm_type
+          );
+        });
 
-      
+        if (!permsTemp) {
+          var sql = 'UPDATE permissions SET ? WHERE permission = ? AND profileid = ? AND perm_type = ?';
+          var setditions = [
+            {
+              profileid: 0
+            },
+            originElement.permission,
+            originElement.profileid,
+            originElement.perm_type
+          ];
+
+          conn.query(sql, setditions, function(err, result) {
+
+          });
+        }
+      });
 
       permissions.forEach(function(element) {
         var sql = 'UPDATE permissions SET ? WHERE permission = ? AND profileid = ? AND perm_type = ?';
