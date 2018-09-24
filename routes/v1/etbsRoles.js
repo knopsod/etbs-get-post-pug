@@ -27,8 +27,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/add', function(req, res, next) {
   res.render('v1/etbsRolesForm', {
-    action: '/etbs-roles/insert',
-    permissions: []
+    action: '/etbs-roles/insert'
   });
 });
 

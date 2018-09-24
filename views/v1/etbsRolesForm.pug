@@ -52,32 +52,36 @@ block content
                   label(for='cnt') Permissions 
                   p
                     a(href= '/etbs-roles/permissions/' + rolename + '/' + profileid)= permsCnt + ' permission(s)'
-              .form-group
-                .box-body
-                  table.table.table-bordered.table-hover
-                    thead
-                      tr
-                        th
-                        th Permission
-                        th Profile ID
-                        th Permission Type
-                        th Role Name
-                    tbody
-                      each permission in permissions
+              if permissions
+                .form-group
+                  .box-body
+                    table.table.table-bordered.table-hover
+                      thead
                         tr
-                          td
-                            input(type='checkbox' checked=(permission.profileid == profileid) name='permissions' value=permission)
-                          td= permission.permission
-                          td= permission.profileid
-                          td= permission.perm_type
-                          td= permission.rolename
-                    tfoot
-                      tr
-                        th
-                        th Permission
-                        th Profile ID
-                        th Permission Type
-                        th Role Name
+                          th
+                          th Permission
+                          th Profile ID
+                          th Permission Type
+                          th Role Name
+                      tbody
+                        each permission in permissions
+                          tr
+                            td
+                              input(type='checkbox' checked=(permission.profileid == profileid) name='permissions' value=permission)
+                            td= permission.permission
+                            td= permission.profileid
+                            td= permission.perm_type
+                            td= permission.rolename
+                      tfoot
+                        tr
+                          th
+                          th Permission
+                          th Profile ID
+                          th Permission Type
+                          th Role Name
+              if permissions
+                each permission in permissions
+                  input(type='hidden' value=permission name='originPermissions')
               // /.box-body
               .box-footer
               if action == '/etbs-roles/insert'
