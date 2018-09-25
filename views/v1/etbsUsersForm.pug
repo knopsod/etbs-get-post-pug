@@ -49,7 +49,7 @@ block content
                   select(name='organization').form-control
                     option -
                     each org in organizations
-                      option(value=org)= org.org_name + '(' + org.clientid + ')'
+                      option(selected=(org.clientid==clientid) value=org)= org.org_name + '(' + org.clientid + ')'
               .form-group
                 label(for='extension') Extension
                 input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
@@ -59,7 +59,7 @@ block content
                   select(name='extension').form-control
                     option -
                     each ext in extensions
-                      option(value=ext)= ext.extension
+                      option(selected=(ext.extension==extension) value=ext)= ext.extension
               .form-group
                 label(for='name') Name
                 input#name.form-control(type='text' placeholder='Name' name='name' value=name)
