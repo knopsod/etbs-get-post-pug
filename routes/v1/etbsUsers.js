@@ -29,9 +29,43 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  res.render('v1/etbsUsersForm', {
-    action    : '/etbs-users/insert'
-  });
+  var conn = database.getConnection();
+
+  if (conn) {
+    var sql = 'SELECT extension FROM extensions';
+    var extensions;
+    var groups;
+
+    conn.query(sql, function (err, extensionsResult) {
+      extensions = extensionsResult;
+
+      var sql = 'SELECT group_id, group_name FROM groups';
+
+      conn.query(sql, function (err, groupsResult) {
+        groups = groupsResult;
+
+        var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
+          org_path, created_at, updated_on
+        FROM organizations`;
+
+        conn.query(sql, function (err, orgsResult) {
+
+          res.render('v1/etbsUsersForm', {
+            action    : '/etbs-users/insert',
+            extensions: extensions,
+            groups    : groups,
+            organizations: orgsResult
+          });
+  
+          conn.end();
+        });
+
+      });
+
+    });
+  } else {
+    res.status(500).send('Can not connect to database');
+  }
 });
 
 router.post('/insert', function(req, res, next) {
