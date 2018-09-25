@@ -27,9 +27,24 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  res.render('v1/etbsPermissionsForm', {
-    action: '/etbs-permissions/insert'
-  });
+  var conn = database.getConnection();
+
+  if (conn) {
+
+    var sql = 'SELECT rolename, profileid, is_active FROM roles';
+
+    conn.query(sql, function (err, rolesResult) {
+
+      res.render('v1/etbsPermissionsForm', {
+        action: '/etbs-permissions/insert',
+        roles: rolesResult
+      });
+  
+      conn.end();
+    })
+  } else {
+    res.status(500).send('Can not connect to database');
+  }
 });
 
 router.post('/insert', function(req, res, next) {
@@ -38,6 +53,9 @@ router.post('/insert', function(req, res, next) {
   var perm_type = req.body.perm_type;
   var is_active = req.body.is_active;
 
+  var role = JSON.parse(req.body.role);
+  console.log('role.profileid:', role.profileid);
+
   var conn = database.getConnection();
 
   if (conn) {
@@ -45,7 +63,7 @@ router.post('/insert', function(req, res, next) {
     var sql = 'INSERT INTO permissions SET ?';
     var perm = {
       permission: permission,
-      profileid: profileid,
+      profileid: role.profileid,
       perm_type: perm_type,
       is_active: is_active
     };
@@ -125,6 +143,9 @@ router.post('/update', function(req, res, next) {
   var perm_type = req.body.perm_type;
   var is_active = req.body.is_active;
 
+  var role = JSON.parse(req.body.role);
+  console.log('role.profileid:', role.profileid);
+
   var conn = database.getConnection();
 
   if (conn) {
@@ -133,7 +154,7 @@ router.post('/update', function(req, res, next) {
     var setditions = [
       {
         permission: permission,
-        profileid: profileid,
+        profileid: role.profileid,
         perm_type: perm_type,
         is_active: is_active
       },
