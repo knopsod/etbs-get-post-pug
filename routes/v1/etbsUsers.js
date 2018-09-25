@@ -80,6 +80,9 @@ router.post('/insert', function(req, res, next) {
   var fax       = req.body.fax;
   var is_active = req.body.is_active;
 
+  clientid = req.body.organization != '-' ? JSON.parse(req.body.organization).clientid : '';
+  extension = req.body.extensionComboBox != '-' ? JSON.parse(req.body.extensionComboBox).extension : '';
+
   var conn = database.getConnection();
 
   if (conn) {
@@ -162,9 +165,13 @@ router.get('/edit/:username', function(req, res, next) {
 
         conn.query(sql, function (err, extensionsResult) {
 
-          var sql = 'SELECT group_id, group_name FROM groups';
+          var sql = `SELECT g.group_id, g.group_name, ug.username 
+          FROM groups g
+          LEFT JOIN (SELECT username, group_id FROM user_group WHERE username = ?) as ug 
+            ON g.group_id = ug.group_id`;
+          var conditions = [username];
 
-          conn.query(sql, function (err, groupsResult) {
+          conn.query(sql, conditions, function (err, groupsResult) {
 
             var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
               org_path, created_at, updated_on
@@ -219,6 +226,9 @@ router.post('/update', function(req, res, next) {
   var mobile    = req.body.mobile;
   var fax       = req.body.fax;
   var is_active = req.body.is_active;
+
+  clientid = req.body.organization != '-' ? JSON.parse(req.body.organization).clientid : '';
+  extension = req.body.extensionComboBox != '-' ? JSON.parse(req.body.extensionComboBox).extension : '';
 
   var groupsObj = req.body.groups;
   var groups;

@@ -53,8 +53,7 @@ router.post('/insert', function(req, res, next) {
   var perm_type = req.body.perm_type;
   var is_active = req.body.is_active;
 
-  var role = JSON.parse(req.body.role);
-  console.log('role.profileid:', role.profileid);
+  profileid = req.body.role != '-' ? JSON.parse(req.body.role).profileid : '';
 
   var conn = database.getConnection();
 
@@ -63,7 +62,7 @@ router.post('/insert', function(req, res, next) {
     var sql = 'INSERT INTO permissions SET ?';
     var perm = {
       permission: permission,
-      profileid: role.profileid,
+      profileid: profileid,
       perm_type: perm_type,
       is_active: is_active
     };
@@ -143,8 +142,7 @@ router.post('/update', function(req, res, next) {
   var perm_type = req.body.perm_type;
   var is_active = req.body.is_active;
 
-  var role = JSON.parse(req.body.role);
-  console.log('role.profileid:', role.profileid);
+  profileid = req.body.role != '-' ? JSON.parse(req.body.role).profileid : '';
 
   var conn = database.getConnection();
 
@@ -154,7 +152,7 @@ router.post('/update', function(req, res, next) {
     var setditions = [
       {
         permission: permission,
-        profileid: role.profileid,
+        profileid: profileid,
         perm_type: perm_type,
         is_active: is_active
       },

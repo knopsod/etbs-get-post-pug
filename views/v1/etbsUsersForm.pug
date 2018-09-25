@@ -55,8 +55,8 @@ block content
                 input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
               if extensions != undefined
                 .form-group
-                  label(for='extension') Extension
-                  select(name='extension').form-control
+                  label(for='extensionComboBox') Extension
+                  select(name='extensionComboBox').form-control
                     option -
                     each ext in extensions
                       option(selected=(ext.extension==extension) value=ext)= ext.extension
@@ -104,7 +104,7 @@ block content
                         each group in groups
                           tr
                             td
-                              input(type='checkbox' name='groups' value=group)
+                              input(type='checkbox' name='groups' value=group checked=(group.username && group.username == username))
                             td= group.group_id
                             td= group.group_name
                       tfoot
