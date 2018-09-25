@@ -26,15 +26,44 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  res.render('v1/etbsRolesForm', {
-    action: '/etbs-roles/insert'
-  });
+  var conn = database.getConnection();
+
+  if (conn) {
+
+    var sql = `SELECT DISTINCT p.permission, p.profileid, p.perm_type, r.rolename
+    FROM permissions p
+    LEFT JOIN roles r ON p.profileid = r.profileid`;
+
+    conn.query(sql, function (err, permsResult) {
+      res.render('v1/etbsRolesForm', {
+        action: '/etbs-roles/insert',
+        permissions : permsResult
+      });
+      
+      conn.end();
+    });
+  
+  } else {
+    res.status(500).send('Can not connect to database');
+  }
+
 });
 
 router.post('/insert', function(req, res, next) {
   var rolename = req.body.rolename;
   var profileid = req.body.profileid;
   var is_active = req.body.is_active;
+
+  var permissionsObj = req.body.permissions;
+  var permissions;
+
+  if (!permissionsObj) {
+    permissions = [];
+  } else if (typeof permissionsObj === 'string') {
+    permissions = [JSON.parse(permissionsObj)];
+  } else {
+    permissions = permissionsObj.map(json => JSON.parse(json));
+  }
   
   var conn = database.getConnection();
   
@@ -48,7 +77,27 @@ router.post('/insert', function(req, res, next) {
     };
 
     conn.query(sql, role, function (err, result) {
-      conn.end();
+
+      permissions.forEach( function (element) {
+        var sql = 'UPDATE permissions SET ? WHERE permission = ? AND profileid = ? AND perm_type = ?';
+          var setditions = [
+            {
+              profileid: profileid
+            },
+            element.permission,
+            element.profileid,
+            element.perm_type
+          ];
+
+          conn.query(sql, setditions, function(err, result) {
+
+          });
+      });
+
+      setTimeout(() => {
+        conn.end();
+      }, 1000);
+
       if (!err)
         res.redirect('/etbs-roles');
       else 

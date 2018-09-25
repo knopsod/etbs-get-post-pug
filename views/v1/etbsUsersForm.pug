@@ -43,7 +43,7 @@ block content
               .form-group
                 label(for='clientid') Client ID
                 input#clientid.form-control(type='text' placeholder='Client ID' name='clientid' value=clientid)
-              if organizations
+              if organizations != undefined
                 .form-group
                   label(for='organization') Organization(Client ID)
                   select(name='organization').form-control
@@ -53,7 +53,7 @@ block content
               .form-group
                 label(for='extension') Extension
                 input#extension.form-control(type='text' placeholder='Extension' name='extension' value=extension)
-              if extensions
+              if extensions != undefined
                 .form-group
                   label(for='extension') Extension
                   select(name='extension').form-control
