@@ -29,6 +29,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
+  var error = req.query.error;
+
   var conn = database.getConnection();
 
   if (conn) {
@@ -54,7 +56,8 @@ router.get('/add', function(req, res, next) {
             action    : '/etbs-users/insert',
             extensions: extensions,
             groups    : groups,
-            organizations: orgsResult
+            organizations: orgsResult,
+            error     : error
           });
   
           conn.end();
@@ -70,6 +73,8 @@ router.get('/add', function(req, res, next) {
 
 router.post('/insert', function(req, res, next) {
   var username  = req.body.username;
+  var password  = req.body.password;
+  var retypePassword = req.body.retypePassword;
   var clientid  = req.body.clientid;
   var extension = req.body.extension;
   var name      = req.body.name;
@@ -83,6 +88,23 @@ router.post('/insert', function(req, res, next) {
   clientid = req.body.organization != '-' ? JSON.parse(req.body.organization).clientid : '';
   extension = req.body.extensionComboBox != '-' ? JSON.parse(req.body.extensionComboBox).extension : '';
 
+  var groupsObj = req.body.groups;
+  var groups;
+
+  if (!groupsObj) {
+    groups = [];
+  } else if (typeof groupsObj === 'string') {
+    groups = [JSON.parse(groupsObj)];
+  } else {
+    groups = groupsObj.map(json => JSON.parse(json));
+  }
+
+  if (password != retypePassword) {
+    res.redirect('/etbs-users/add' + '?error=1');
+
+    return;
+  }
+
   var conn = database.getConnection();
 
   if (conn) {
@@ -90,6 +112,7 @@ router.post('/insert', function(req, res, next) {
     var sql = 'INSERT INTO users SET ?';
     var user = {
       username  : username,
+      password  : password,
       clientid  : clientid,
       extension : extension,
       name      : name,
@@ -102,7 +125,23 @@ router.post('/insert', function(req, res, next) {
     };
 
     conn.query(sql, user, function (err, result) {
-      conn.end();
+      
+      groups.forEach( function (element) {
+        var sql_ins = 'INSERT INTO user_group SET ?';
+        var ug = {
+          username: username,
+          group_id: element.group_id
+        };
+
+        conn.query(sql_ins, ug, function (err, result) {
+          console.log(sql_ins);
+        });
+      });
+
+      setTimeout(() => {
+        conn.end();
+      }, 1000);
+      
       if (!err)
         res.redirect('/etbs-users');
       else
@@ -121,6 +160,7 @@ router.get('/edit/:username', function(req, res, next) {
 
   var error = req.query.error;
 
+  var password  = '';
   var clientid  = '';
   var extension = '';
   var name      = '';
@@ -137,12 +177,13 @@ router.get('/edit/:username', function(req, res, next) {
   var conn = database.getConnection();
 
   if (conn) {
-    var sql = `SELECT clientid, extension, name, logo, company, 
-      email, mobile, fax, is_active, rolename 
+    var sql = `SELECT password, clientid, extension, name, logo, 
+      company, email, mobile, fax, is_active, rolename 
     FROM users WHERE username = ? LIMIT 1 OFFSET 0`;
     var conditions = [username];
 
     conn.query(sql, conditions, function (err, result) {
+      password  = result.length ? result[0].password  : '';
       clientid  = result.length ? result[0].clientid  : '';
       extension = result.length ? result[0].extension : '';
       name      = result.length ? result[0].name      : '';
@@ -182,6 +223,7 @@ router.get('/edit/:username', function(req, res, next) {
               res.render('v1/etbsUsersForm', {
                 action    : '/etbs-users/update',
                 username  : username,
+                password  : password,
                 clientid  : clientid,
                 extension : extension,
                 name      : name,
@@ -217,6 +259,7 @@ router.post('/update', function(req, res, next) {
   var originUsername = req.body.originUsername;
 
   var username  = req.body.username;
+  var password  = req.body.password;
   var clientid  = req.body.clientid;
   var extension = req.body.extension;
   var name      = req.body.name;
@@ -241,8 +284,6 @@ router.post('/update', function(req, res, next) {
     groups = groupsObj.map(json => JSON.parse(json));
   }
 
-  console.log(groups);
-
   var conn = database.getConnection();
 
   if (conn) {
@@ -251,6 +292,7 @@ router.post('/update', function(req, res, next) {
     var setditions = [
       {
         username  : username,
+        password  : password,
         clientid  : clientid,
         extension : extension,
         name      : name,
@@ -265,11 +307,33 @@ router.post('/update', function(req, res, next) {
     ];
 
     conn.query(sql, setditions, function (err, result) {
-      conn.end();
+      var sql_del = 'DELETE FROM user_group WHERE username = ?';
+      var conditions = [username];
+
+      conn.query(sql_del, conditions, function (err, result) {
+        console.log(sql_del);
+      });
+
+      groups.forEach( function (element) {
+        var sql_ins = 'INSERT INTO user_group SET ?';
+        var ug = {
+          username: username,
+          group_id: element.group_id
+        };
+
+        conn.query(sql_ins, ug, function (err, result) {
+          console.log(sql_ins);
+        });
+      });
+
+      setTimeout(() => {
+        conn.end();
+      }, 1000);
+      
       if (!err)
         res.redirect('/etbs-users');
       else
-      res.redirect('/etbs-users/edit/' + originUsername + '?error=1');
+        res.redirect('/etbs-users/edit/' + originUsername + '?error=1');
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -279,6 +343,7 @@ router.post('/update', function(req, res, next) {
 router.get('/remove/:username', function(req, res, next) {
   var username = req.params.username;
 
+  var password  = '';
   var clientid  = '';
   var extension = '';
   var name      = '';
@@ -295,12 +360,13 @@ router.get('/remove/:username', function(req, res, next) {
   var conn = database.getConnection();
 
   if (conn) {
-    var sql = `SELECT clientid, extension, name, logo, company, 
+    var sql = `SELECT password, clientid, extension, name, logo, company, 
       email, mobile, fax, is_active, rolename 
     FROM users WHERE username = ? LIMIT 1 OFFSET 0`;
     var conditions = [username];
 
     conn.query(sql, conditions, function (err, result) {
+      password  = result.length ? result[0].password  : '';
       clientid  = result.length ? result[0].clientid  : '';
       extension = result.length ? result[0].extension : '';
       name      = result.length ? result[0].name      : '';
@@ -324,6 +390,7 @@ router.get('/remove/:username', function(req, res, next) {
         res.render('v1/etbsUsersForm', {
           action    : '/etbs-users/delete',
           username  : username,
+          password  : password,
           clientid  : clientid,
           extension : extension,
           name      : name,
