@@ -34,38 +34,48 @@ router.get('/add', function(req, res, next) {
   var conn = database.getConnection();
 
   if (conn) {
-    var sql = 'SELECT extension FROM extensions';
     var extensions;
     var groups;
+    var roles;
 
-    conn.query(sql, function (err, extensionsResult) {
-      extensions = extensionsResult;
+    var sql = 'SELECT rolename, is_active FROM roles ORDER BY is_active DESC';
 
-      var sql = 'SELECT group_id, group_name FROM groups';
+    conn.query(sql, function (err, rolesResult) {
+      roles = rolesResult;
 
-      conn.query(sql, function (err, groupsResult) {
-        groups = groupsResult;
+      var sql = 'SELECT extension FROM extensions';
 
-        var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
-          org_path, created_at, updated_on
-        FROM organizations`;
+      conn.query(sql, function (err, extensionsResult) {
+        extensions = extensionsResult;
 
-        conn.query(sql, function (err, orgsResult) {
+        var sql = 'SELECT group_id, group_name FROM groups';
 
-          res.render('v1/etbsUsersForm', {
-            action    : '/etbs-users/insert',
-            extensions: extensions,
-            groups    : groups,
-            organizations: orgsResult,
-            error     : error
+        conn.query(sql, function (err, groupsResult) {
+          groups = groupsResult;
+
+          var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
+            org_path, created_at, updated_on
+          FROM organizations`;
+
+          conn.query(sql, function (err, orgsResult) {
+
+            res.render('v1/etbsUsersForm', {
+              action    : '/etbs-users/insert',
+              extensions: extensions,
+              groups    : groups,
+              organizations: orgsResult,
+              roles     : roles,
+              error     : error
+            });
+    
+            conn.end();
           });
-  
-          conn.end();
+
         });
 
       });
-
     });
+    
   } else {
     res.status(500).send('Can not connect to database');
   }
@@ -76,6 +86,7 @@ router.post('/insert', function(req, res, next) {
   var password  = req.body.password;
   var retypePassword = req.body.retypePassword;
   var clientid  = req.body.clientid;
+  var rolename  = req.body.rolename;
   var extension = req.body.extension;
   var name      = req.body.name;
   var logo      = req.body.logo;
@@ -86,6 +97,7 @@ router.post('/insert', function(req, res, next) {
   var is_active = req.body.is_active;
 
   clientid = req.body.organization != '-' ? JSON.parse(req.body.organization).clientid : '';
+  rolename = req.body.role != '-' ? JSON.parse(req.body.role).rolename : '';
   extension = req.body.extensionComboBox != '-' ? JSON.parse(req.body.extensionComboBox).extension : '';
 
   var groupsObj = req.body.groups;
@@ -114,6 +126,7 @@ router.post('/insert', function(req, res, next) {
       username  : username,
       password  : password,
       clientid  : clientid,
+      rolename  : rolename,
       extension : extension,
       name      : name,
       logo      : logo,
@@ -202,46 +215,53 @@ router.get('/edit/:username', function(req, res, next) {
       conn.query(sql, conditions, function (err, resultCnt) {
         cnt = resultCnt.length ? resultCnt[0].cnt : 0;
 
-        var sql = 'SELECT extension FROM extensions';
+        var sql = 'SELECT rolename, is_active FROM roles ORDER BY is_active DESC';
 
-        conn.query(sql, function (err, extensionsResult) {
+        conn.query(sql, function (err, rolesResult) {
 
-          var sql = `SELECT g.group_id, g.group_name, ug.username 
-          FROM groups g
-          LEFT JOIN (SELECT username, group_id FROM user_group WHERE username = ?) as ug 
-            ON g.group_id = ug.group_id`;
-          var conditions = [username];
+          var sql = 'SELECT extension FROM extensions';
 
-          conn.query(sql, conditions, function (err, groupsResult) {
+          conn.query(sql, function (err, extensionsResult) {
 
-            var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
-              org_path, created_at, updated_on
-            FROM organizations`;
+            var sql = `SELECT g.group_id, g.group_name, ug.username 
+            FROM groups g
+            LEFT JOIN (SELECT username, group_id FROM user_group WHERE username = ?) as ug 
+              ON g.group_id = ug.group_id`;
+            var conditions = [username];
 
-            conn.query(sql, function (err, orgsResult) {
+            conn.query(sql, conditions, function (err, groupsResult) {
 
-              res.render('v1/etbsUsersForm', {
-                action    : '/etbs-users/update',
-                username  : username,
-                password  : password,
-                clientid  : clientid,
-                extension : extension,
-                name      : name,
-                logo      : logo,
-                company   : company,
-                email     : email,
-                mobile    : mobile,
-                fax       : fax,
-                is_active : is_active,
-                rolename  : rolename,
-                cnt       : cnt,
-                error     : error,
-                extensions: extensionsResult,
-                groups    : groupsResult,
-                organizations : orgsResult
+              var sql = `SELECT orgid, org_name, parent_orgid, budget, clientid, 
+                org_path, created_at, updated_on
+              FROM organizations`;
+
+              conn.query(sql, function (err, orgsResult) {
+
+                res.render('v1/etbsUsersForm', {
+                  action    : '/etbs-users/update',
+                  username  : username,
+                  password  : password,
+                  clientid  : clientid,
+                  extension : extension,
+                  name      : name,
+                  logo      : logo,
+                  company   : company,
+                  email     : email,
+                  mobile    : mobile,
+                  fax       : fax,
+                  is_active : is_active,
+                  rolename  : rolename,
+                  cnt       : cnt,
+                  error     : error,
+                  extensions: extensionsResult,
+                  groups    : groupsResult,
+                  organizations : orgsResult,
+                  roles     : rolesResult
+                });
+        
+                conn.end();
               });
-      
-              conn.end();
+
             });
 
           });
@@ -249,6 +269,7 @@ router.get('/edit/:username', function(req, res, next) {
         });
 
       });
+
     });
   } else {
     res.status(500).send('Can not connect to database');
@@ -261,6 +282,7 @@ router.post('/update', function(req, res, next) {
   var username  = req.body.username;
   var password  = req.body.password;
   var clientid  = req.body.clientid;
+  var rolename  = req.body.rolename;
   var extension = req.body.extension;
   var name      = req.body.name;
   var logo      = req.body.logo;
@@ -271,6 +293,7 @@ router.post('/update', function(req, res, next) {
   var is_active = req.body.is_active;
 
   clientid = req.body.organization != '-' ? JSON.parse(req.body.organization).clientid : '';
+  rolename = req.body.role != '-' ? JSON.parse(req.body.role).rolename : '';
   extension = req.body.extensionComboBox != '-' ? JSON.parse(req.body.extensionComboBox).extension : '';
 
   var groupsObj = req.body.groups;
@@ -294,6 +317,7 @@ router.post('/update', function(req, res, next) {
         username  : username,
         password  : password,
         clientid  : clientid,
+        rolename  : rolename,
         extension : extension,
         name      : name,
         logo      : logo,

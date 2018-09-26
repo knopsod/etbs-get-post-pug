@@ -83,18 +83,25 @@ block content
               .form-group
                 label(for='is_active') Active
                 input#is_active.form-control(type='text' placeholder='Active' name='is_active' value=is_active)
-              if rolename != undefined
+              if rolename != undefined && false
                 .form-group
                   label(for='roles') Role
                   p
                     a(href= '/etbs-users/roles/' + username)= rolename ? rolename : 'Not yet assign role'
-              if cnt != undefined
+              if roles != undefined
+                .form-group
+                  label(for='role') Role
+                  select(name='role').form-control
+                    each role in roles
+                      option(selected=(role.rolename==rolename) value=role)= role.rolename
+              if cnt != undefined && false
                 .form-group
                   label(for='cnt') Groups
                   p
                     a(href= '/etbs-users/user-group/' + username)= cnt + ' group(s)'
               if groups
                 .form-group
+                  label Groups
                   .box-body
                     table#datatable-users-form.table.table-bordered.table-hover
                       thead
