@@ -38,16 +38,17 @@ block content
               .form-group
                 label(for='permission') Permission
                 input#permission.form-control(type='text', placeholder='Permission' name='permission' value=permission required)
-              .form-group
-                label(for='profileid') Profile ID
-                input#profileid.form-control(type='text', placeholder='Profile ID' name='profileid' value=profileid required)
+              if false
+                .form-group
+                  label(for='profileid') Profile ID
+                  input#profileid.form-control(type='text', placeholder='Profile ID' name='profileid' value=profileid required)
               .form-group
                 label(for='perm_type') Permission Type
                 input#perm_type.form-control(type='text', placeholder='Permission Type' name='perm_type' value=perm_type required)
               .form-group
                 label(for='is_active') Active
                 input#is_active.form-control(type='text', placeholder='Active' name='is_active' value=is_active)
-              if rolename != undefined
+              if rolename != undefined && false
                 .form-group
                   label(for='rolename') Role
                   p
